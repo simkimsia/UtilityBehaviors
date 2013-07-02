@@ -29,7 +29,7 @@ class FindXORCreatableBehavior extends ModelBehavior {
 	public $settings = array();
 
 /**
- * Behavior settings
+ * Cake Model
  *
  * @access public
  * @var array
