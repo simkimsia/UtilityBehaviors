@@ -56,7 +56,7 @@ class FindXORCreatableBehavior extends ModelBehavior {
  * @param array $data. Should not contain data within the subarray of the mode.
  * @return array Either the found or newly created Model data 
  */
-	public function findXORCreate(Model &$model, $data = array(), $findFields = array()) {
+	public function findXORCreate(Model $model, $data = array(), $findFields = array()) {
 		$suppliedData = array();
 		if (isset($data[$model->alias])) {
 			$suppliedData = $data[$model->alias];
@@ -75,6 +75,18 @@ class FindXORCreatableBehavior extends ModelBehavior {
 				}
 			}
 		}
+		if (!$model->Behaviors->enabled('UtilityBehaviors.ValidateFields')) {
+			$model->Behaviors->load('UtilityBehaviors.ValidateFields');
+		}
+
+		$validFindFields = $model->validateFields(array_keys($conditions), array('return' => 'valid'));
+
+		foreach ($conditions as $field => $value) {
+			if (!in_array($field, $validFindFields)) {
+				unset($conditions[$field]);
+			}
+		}
+
 		$found = $model->find('first', array(
 			'conditions' => $conditions
 		));

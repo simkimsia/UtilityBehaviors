@@ -57,7 +57,7 @@ class ModelDataExtractableBehavior extends ModelBehavior {
  * @param string $alias. Optional. Default null. If null, we use the $model->alias
  * @return array Either the subarray or the entire array.
  */
-	public function extractModelData(Model &$model, $data, $alias = null) {
+	public function extractModelData(Model $model, $data, $alias = null) {
 		if ($alias == null) {
 			$alias = $model->alias;
 		}
