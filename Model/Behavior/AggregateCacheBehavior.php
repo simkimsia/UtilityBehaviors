@@ -3,7 +3,7 @@
  * AggregateCache Behavior 
  * 
  * Usage: 
- * var $actsAs = array('AggregateCache'=>array(array( 
+ * public $actsAs = array('UtilityBehaviors.AggregateCache'=>array(array( 
  *   'field'=>'name of the field to aggregate', 
  *   'model'=>'belongsTo model alias to store the cached values', 
  *   'min'=>'field name to store the minimum value', 
@@ -16,13 +16,13 @@
  * 
  * Example: 
  * class Comments extends AppModel { 
- *   var $name = 'Comment'; 
- *   var $actsAs = array( 
+ *   public $name = 'Comment'; 
+ *   public $actsAs = array( 
  *     'AggregateCache'=>array( 
  *         'rating'=>array('model'=>'Post', 'avg'=>'average_rating', 'max'=>'best_rating'), 
  *         array('field'=>'created', 'model'=>'Post', 'max'=>'latest_comment_date', 'conditions'=>array('visible'=>'1'), 'recursive'=>-1)
  *     )); 
- *   var $belongsTo = array('Post'); 
+ *   public $belongsTo = array('Post'); 
  * } 
  * 
  * Each element of the configuration array should be an array that specifies: 
@@ -102,14 +102,14 @@ class AggregateCacheBehavior extends ModelBehavior {
         } 
     } 
 
-    public function beforeDelete(Model $model) { 
+    public function beforeDelete(Model $model, $cascade = true) { 
         foreach ($model->belongsTo as $assocKey => $assocData) { 
             $this->foreignTableIDs[$assocData['className']] = $model->field($assocData['foreignKey']); 
         } 
         return true; 
     } 
 
-    public function afterDelete($model) { 
+    public function afterDelete(Model $model) { 
         foreach ($this->config as $aggregate) { 
             if (!array_key_exists($aggregate['model'], $model->belongsTo)) { 
                 continue; 
