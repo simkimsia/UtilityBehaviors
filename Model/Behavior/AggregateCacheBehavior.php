@@ -97,14 +97,18 @@ class AggregateCacheBehavior extends ModelBehavior {
                 continue; 
             } 
             $foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey']; 
-            $foreignId = $model->data[$model->name][$foreignKey]; 
-            $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
+            if (isset($model->data[$model->name][$foreignKey])) {
+                $foreignId = $model->data[$model->name][$foreignKey]; 
+                $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
+            }
         } 
     } 
 
     public function beforeDelete(Model $model, $cascade = true) { 
         foreach ($model->belongsTo as $assocKey => $assocData) { 
-            $this->foreignTableIDs[$assocData['className']] = $model->field($assocData['foreignKey']); 
+            if (isset($assocData['className']) && isset($assocData['foreignKey'])) {
+                $this->foreignTableIDs[$assocData['className']] = $model->field($assocData['foreignKey']); 
+            }
         } 
         return true; 
     } 
@@ -115,9 +119,11 @@ class AggregateCacheBehavior extends ModelBehavior {
                 continue; 
             } 
             $foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey']; 
-            $foreignId = $this->foreignTableIDs[$aggregate['model']]; 
-            $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
-        } 
-    } 
+            if (!empty($this->foreignTableIDs[$aggregate['model']])) {
+                $foreignId = $this->foreignTableIDs[$aggregate['model']]; 
+                $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
+            }
+        }
+    }
 
 } 
