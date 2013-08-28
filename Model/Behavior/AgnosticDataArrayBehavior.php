@@ -100,7 +100,6 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 		$mainModelData = $this->extractByAlias($model, $data, $alias);
 		$results = array();
 		foreach($fields as $field) {
-			$model->log($field);
 			$lookForMainModelField = (strpos($field, '.') === false);
 			if ($lookForMainModelField) {
 				$alternativeField = $alias . '.' . $field;
