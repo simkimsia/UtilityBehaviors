@@ -20,6 +20,7 @@
  * @author Kim Stacks <kim@stacktogether.com>
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+App::uses('Hash', 'Utility');
 class AgnosticDataArrayBehavior extends ModelBehavior {
 
 /**
@@ -82,7 +83,7 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
  * @param array pass by reference. &$missingFields is array listing all the fields that are missing
  * @return array Extracted fields and their values.
  */
-	public function extractByFields(Model $model, $data, $options = array(), &$missingFields) {
+	public function extractByFields(Model $model, $data, $options = array(), Array $missingFields) {
 		$defaultOptions = array(
 			'alias' => null,
 			'fields' => array()
@@ -99,6 +100,7 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 		$mainModelData = $this->extractByAlias($model, $data, $alias);
 		$results = array();
 		foreach($fields as $field) {
+			$model->log($field);
 			$lookForMainModelField = (strpos($field, '.') === false);
 			if ($lookForMainModelField) {
 				$alternativeField = $alias . '.' . $field;
