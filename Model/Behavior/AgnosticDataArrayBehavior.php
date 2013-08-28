@@ -40,6 +40,14 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 	public $model = null;
 
 /**
+ * Missing Fields for extract methods
+ *
+ * @access public
+ * @var array
+ */
+	public $missingFields = array();
+
+/**
  * Configuration method.
  *
  * @param object $Model Model object
@@ -80,10 +88,11 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
  * @param array $options Options array that contains the following 2 keys
  	- fields: array of the fields we want to extract
  	- alias: string $alias. Optional. Default null. If null, we use the $model->alias
- * @param array pass by reference. &$missingFields is array listing all the fields that are missing
  * @return array Extracted fields and their values.
  */
-	public function extractByFields(Model $model, $data, $options = array(), Array $missingFields) {
+	public function extractByFields(Model $model, $data, $options = array()) {
+		$this->missingFields = array();
+
 		$defaultOptions = array(
 			'alias' => null,
 			'fields' => array()
@@ -108,16 +117,25 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 				} else if (Hash::check($data, $alternativeField)) {
 					$results[$field] = Hash::get($data, $alternativeField);
 				} else {
-					$missingFields[] = $field;
+					$this->missingFields[] = $field;
 				}
 			} else {
 				if (Hash::check($data, $field)) {
 					$results[$field] = Hash::get($data, $field);
 				} else {
-					$missingFields[] = $field;
+					$this->missingFields[] = $field;
 				}
 			}
 		}
 		return $results;
+	}
+
+/**
+ *
+ * return the missing fields after extractByFields
+ * @return array Missing Fields
+ */
+	public function getMissingFields(Model $model) {
+		return $this->missingFields;
 	}
 }
