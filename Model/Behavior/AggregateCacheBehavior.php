@@ -44,27 +44,40 @@ class AggregateCacheBehavior extends ModelBehavior {
     var $foreignTableIDs = array(); 
     var $config = array(); 
     var $functions = array('min', 'max', 'avg', 'sum'); 
+    var $defaultWhenNulls = array(
+        'min_default_when_null',
+        'max_default_when_null',
+        'avg_default_when_null',
+        'sum_default_when_null',
+    );
 
-    public function setup(Model $model, $config = array()) { 
+    public function setup(Model $model, $config = array()) {
         foreach ($config as $k => $aggregate) { 
             if (empty($aggregate['field'])) { 
                 $aggregate['field'] = $k; 
             } 
             if (!empty($aggregate['field']) && !empty($aggregate['model'])) { 
                 $this->config[] = $aggregate; 
-            } 
+            }
         } 
     } 
 
     private function __updateCache(Model $model, $aggregate, $foreignKey, $foreignId) { 
         $assocModel = $model->{$aggregate['model']}; 
-        $calculations = array(); 
+        $calculations = array();
         foreach ($aggregate as $function => $cacheField) { 
             if (!in_array($function, $this->functions)) { 
                 continue; 
-            } 
+            }
             $calculations[] = $function . '(' . $model->name . '.' . $aggregate['field'] . ') ' . $function . '_value'; 
-        } 
+        }
+        $defaultWhenNulls = array();
+        foreach ($aggregate as $functionDefaultWhenNull => $defaultValue) { 
+            if (!in_array($functionDefaultWhenNull, $this->defaultWhenNulls)) { 
+                continue; 
+            }
+            $defaultWhenNulls[$functionDefaultWhenNull] = $defaultValue; 
+        }
         if (count($calculations) > 0) { 
             $conditions = array($model->name . '.' . $foreignKey => $foreignId); 
             if (array_key_exists('conditions', $aggregate)) { 
@@ -83,9 +96,13 @@ class AggregateCacheBehavior extends ModelBehavior {
             foreach ($aggregate as $function => $cacheField) { 
                 if (!in_array($function, $this->functions)) { 
                     continue; 
-                } 
-                $newValues[$cacheField] = $results[0][$function . '_value']; 
-            } 
+                }
+                if ($results[0][$function . '_value'] == null && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
+                    $newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
+                } else {
+                    $newValues[$cacheField] = $results[0][$function . '_value']; 
+                }
+            }
             $assocModel->id = $foreignId; 
             $assocModel->save($newValues, false, array_keys($newValues)); 
         } 
