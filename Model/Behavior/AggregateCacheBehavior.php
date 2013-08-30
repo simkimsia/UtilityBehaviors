@@ -15,14 +15,24 @@
  *  ))); 
  * 
  * Example: 
- * class Comments extends AppModel { 
- *   public $name = 'Comment'; 
- *   public $actsAs = array( 
- *     'AggregateCache'=>array( 
- *         'rating'=>array('model'=>'Post', 'avg'=>'average_rating', 'max'=>'best_rating'), 
- *         array('field'=>'created', 'model'=>'Post', 'max'=>'latest_comment_date', 'conditions'=>array('visible'=>'1'), 'recursive'=>-1)
- *     )); 
- *   public $belongsTo = array('Post'); 
+ * class QuotationLineItem extends AppModel { 
+ *   public $name = 'QuotationLineItem'; 
+ *
+ *'UtilityBehaviors.AggregateCache' => array( 
+ *               array(
+ *                   'field' => 'total_value',
+ *                   'model' =>'Quotation', 
+ *                  'sum'   =>'applied_voucher_value',
+ *                  'sum_default_when_null' => 0,
+ *                  'conditions' => array('QuotationLineItem.voucher_applied' => 1),
+ *              ),
+ *              array(
+ *                  'field' => 'total_value',
+ *                  'model' =>'Quotation', 
+ *                  'sum'   =>'total_value',
+ *              ),
+ *      ),
+ *   public $belongsTo = array('Quotation'); 
  * } 
  * 
  * Each element of the configuration array should be an array that specifies: 
