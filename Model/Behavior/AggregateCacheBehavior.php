@@ -107,10 +107,12 @@ class AggregateCacheBehavior extends ModelBehavior {
                 if (!in_array($function, $this->functions)) { 
                     continue; 
                 }
-                if ($results[0][$function . '_value'] == null && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
+                if ((!isset($results[0]) || $results[0][$function . '_value'] == null) && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
                     $newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
-                } else {
+                } else if (isset($results[0]) {
                     $newValues[$cacheField] = $results[0][$function . '_value']; 
+                } else {
+                    $newValues[$cacheField] = null;
                 }
             }
             $assocModel->id = $foreignId; 
