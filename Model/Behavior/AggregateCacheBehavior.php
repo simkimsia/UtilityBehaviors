@@ -15,14 +15,24 @@
  *  ))); 
  * 
  * Example: 
- * class Comments extends AppModel { 
- *   public $name = 'Comment'; 
- *   public $actsAs = array( 
- *     'AggregateCache'=>array( 
- *         'rating'=>array('model'=>'Post', 'avg'=>'average_rating', 'max'=>'best_rating'), 
- *         array('field'=>'created', 'model'=>'Post', 'max'=>'latest_comment_date', 'conditions'=>array('visible'=>'1'), 'recursive'=>-1)
- *     )); 
- *   public $belongsTo = array('Post'); 
+ * class QuotationLineItem extends AppModel { 
+ *   public $name = 'QuotationLineItem'; 
+ *
+ *'UtilityBehaviors.AggregateCache' => array( 
+ *               array(
+ *                   'field' => 'total_value',
+ *                   'model' =>'Quotation', 
+ *                  'sum'   =>'applied_voucher_value',
+ *                  'sum_default_when_null' => 0,
+ *                  'conditions' => array('QuotationLineItem.voucher_applied' => 1),
+ *              ),
+ *              array(
+ *                  'field' => 'total_value',
+ *                  'model' =>'Quotation', 
+ *                  'sum'   =>'total_value',
+ *              ),
+ *      ),
+ *   public $belongsTo = array('Quotation'); 
  * } 
  * 
  * Each element of the configuration array should be an array that specifies: 
@@ -44,27 +54,40 @@ class AggregateCacheBehavior extends ModelBehavior {
     var $foreignTableIDs = array(); 
     var $config = array(); 
     var $functions = array('min', 'max', 'avg', 'sum'); 
+    var $defaultWhenNulls = array(
+        'min_default_when_null',
+        'max_default_when_null',
+        'avg_default_when_null',
+        'sum_default_when_null',
+    );
 
-    public function setup(Model $model, $config = array()) { 
+    public function setup(Model $model, $config = array()) {
         foreach ($config as $k => $aggregate) { 
             if (empty($aggregate['field'])) { 
                 $aggregate['field'] = $k; 
             } 
             if (!empty($aggregate['field']) && !empty($aggregate['model'])) { 
                 $this->config[] = $aggregate; 
-            } 
+            }
         } 
     } 
 
     private function __updateCache(Model $model, $aggregate, $foreignKey, $foreignId) { 
         $assocModel = $model->{$aggregate['model']}; 
-        $calculations = array(); 
+        $calculations = array();
         foreach ($aggregate as $function => $cacheField) { 
             if (!in_array($function, $this->functions)) { 
                 continue; 
-            } 
+            }
             $calculations[] = $function . '(' . $model->name . '.' . $aggregate['field'] . ') ' . $function . '_value'; 
-        } 
+        }
+        $defaultWhenNulls = array();
+        foreach ($aggregate as $functionDefaultWhenNull => $defaultValue) { 
+            if (!in_array($functionDefaultWhenNull, $this->defaultWhenNulls)) { 
+                continue; 
+            }
+            $defaultWhenNulls[$functionDefaultWhenNull] = $defaultValue; 
+        }
         if (count($calculations) > 0) { 
             $conditions = array($model->name . '.' . $foreignKey => $foreignId); 
             if (array_key_exists('conditions', $aggregate)) { 
@@ -83,9 +106,15 @@ class AggregateCacheBehavior extends ModelBehavior {
             foreach ($aggregate as $function => $cacheField) { 
                 if (!in_array($function, $this->functions)) { 
                     continue; 
-                } 
-                $newValues[$cacheField] = $results[0][$function . '_value']; 
-            } 
+                }
+                if ((!isset($results[0]) || $results[0][$function . '_value'] == null) && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
+                    $newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
+                } else if (isset($results[0])) {
+                    $newValues[$cacheField] = $results[0][$function . '_value']; 
+                } else {
+                    $newValues[$cacheField] = null;
+                }
+            }
             $assocModel->id = $foreignId; 
             $assocModel->save($newValues, false, array_keys($newValues)); 
         } 
