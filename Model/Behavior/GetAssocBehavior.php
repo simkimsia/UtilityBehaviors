@@ -3,7 +3,9 @@
  * GetAssoc Behavior 
  * 
  * Usage: 
+ * make sure the primary model has this:
  * public $actsAs = array('UtilityBehaviors.GetAssoc'); 
+ * then you can do $this->primaryModel->getAssoc('SecondaryModel', 'list');
  * 
  * Example: 
  * class Batch extends AppModel { 
@@ -20,7 +22,11 @@
  *       ),
  *   ); 
  * }
- * 
+ * You can fetch just the customer data when you are in BatchesController this way:
+ * $customers = $this->Batch->getAssoc('Customer', 'list');
+ * $customers = $this->Batch->getAssoc('Customer', 'all');
+ * $customerCount = $this->Batch->getAssoc('Customer', 'count');
+ *
  * Copyright 2013, Kim Stacks
  * Singapore
  *
