@@ -1,3 +1,18 @@
-# Utility Behaviors Plugin
+### Status
+[![Build Status](https://travis-ci.org/simkimsia/UtilityBehaviors.png)](https://travis-ci.org/simkimsia/UtilityBehaviors)
 
-Some useful behaviors I wrote but too small to be standalone plugins.
+### Installation
+
+
+1. Download zip file and unzip to `app/Plugin/UtilityBehaviors`
+2. Pull as a submodule into your app:
+
+	git submodule add git@github.com:simkimsia/UtilityBehaviors.git Plugin/UtilityBehaviors
+3. Use composer
+
+I assume that your CakePHP application folder is named `app`
+
+Read the Wiki on how to use the UtilityBehaviors:
+
+1. StringLib
+
