@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * GetAssocBehaviorTest file
+ * AgnosticDataArrayBehaviorTest file
  *
  * PHP 5
  *
@@ -19,18 +19,17 @@
  * @subpackage UtilityBehaviors.Test.Case.Model.Behavior
  * @filesource
  * @version 0.1
- * @lastmodified 2013-10-12
+ * @lastmodified 2013-10-19
  */
 
 App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
 require_once dirname(dirname(__FILE__)) . DS . 'mock_models.php';
-
 /**
- * GetAssocBehaviorTest class
+ * AgnosticDataArrayTest class
  *
  */
-class GetAssocBehaviorTest extends CakeTestCase {
+class AgnosticDataArrayTest extends CakeTestCase {
 	public $fixtures = array(
 		'plugin.utility_behaviors.user',
 		'plugin.utility_behaviors.customer_profile',
@@ -55,7 +54,8 @@ class GetAssocBehaviorTest extends CakeTestCase {
 				)
 			)
 		), false);
-		$this->CustomerProfile->Behaviors->attach('UtilityBehaviors.GetAssoc');
+		$this->CustomerProfile->Behaviors->attach('UtilityBehaviors.AgnosticDataArray');
+		$this->User->Behaviors->attach('UtilityBehaviors.AgnosticDataArray');
 	}
 
 /**
@@ -70,18 +70,28 @@ class GetAssocBehaviorTest extends CakeTestCase {
 
 
 /**
- * testBelongsTo method
+ * testExtractByAlias method
  *
  * @return void
  */
-	public function testBelongsTo() {
-		// WHEN we find list of Customer via $this->CustomerProfile
-		$result = $this->CustomerProfile->getAssoc('Customer', 'list');
+	public function testExtractByAlias() {
+		// GIVEN the following data array
+		$data = array(
+			'CustomerProfile' => array (
+				'customer_id' => 2, 
+				'biography' => 'Another Customer Profile'
+			),
+			'User' => array(
+				'id' => 2,
+			)
+		);
+		// WHEN we find extractByAlias
+		$result = $this->CustomerProfile->extractByAlias($data);
 
 		// THEN we expect
 		$expected = array(
-			'2' => 'Zend',
-			'4' => 'CodeIgniter'
+			'customer_id' => 2,
+			'biography' => 'Another Customer Profile'
 		);
 
 		$this->assertEquals($expected, $result);
