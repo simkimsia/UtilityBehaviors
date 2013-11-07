@@ -17,6 +17,11 @@
  * @link http://stacktogether.com
  * @author Kim Stacks <kim@stacktogether.com>
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @package UtilityBehaviors
+ * @subpackage UtilityBehaviors.Model.Behavior
+ * @filesource
+ * @version 0.1
+ * @lastmodified 2013-11-07 
  */
 class FindXORCreatableBehavior extends ModelBehavior {
 

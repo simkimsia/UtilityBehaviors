@@ -17,10 +17,10 @@
  * @author Kim Stacks <kim@stacktogether.com>
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
- * @subpackage UtilityBehaviors.Test.Case.Model.Behavior
+ * @subpackage UtilityBehaviors.Test.Case.Model
  * @filesource
  * @version 0.1
- * @lastmodified 2013-10-19
+ * @lastmodified 2013-11-07
  */
 
 App::uses('Model', 'Model');
@@ -30,7 +30,7 @@ App::uses('AppModel', 'Model');
 /**
  * User class
  *
- * @package       UtilityBehaviors.Test.Case.Model.Behavior
+ * @package       UtilityBehaviors.Test.Case.Model
  */
 class User extends CakeTestModel {
 
@@ -59,7 +59,7 @@ class User extends CakeTestModel {
 /**
  * Group class
  *
- * @package       UtilityBehaviors.Test.Case.Model.Behavior
+ * @package       UtilityBehaviors.Test.Case.Model
  */
 class Group extends CakeTestModel {
 

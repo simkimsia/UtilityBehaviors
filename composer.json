@@ -1,7 +1,27 @@
 {
-	"name": "simkimsia/utility_behaviors",
-	"type": "cakephp-plugin",
-	"require": {
-		"composer/installers": "~1.0"
-	}
+  "name": "simkimsia/UtilityBehaviors",
+  "version": "0.1",
+  "description": "Useful behaviors for CakePHP 2.x",
+  "type": "cakephp-plugin",
+  "keywords": [
+    "cakephp"
+  ],
+  "homepage": "http://github.com/simkimsia/UtilityBehaviors",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kim Stacks",
+      "role": "Maintainer"
+    },
+  ],
+  "require": {
+    "composer/installers": "*"
+  },
+  "support": {
+    "issues": "https://github.com/simkimsia/UtilityBehaviors/issues",
+    "source": "https://github.com/simkimsia/UtilityBehaviors"
+  },
+  "extra": {
+    "installer-name": "UtilityBehaviors"
+  }
 }

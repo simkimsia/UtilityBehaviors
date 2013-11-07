@@ -1,5 +1,26 @@
 <?php
-
+/**
+ * UserFixture
+ *
+ * Fixtures for a User model that belongsTo Group as the relationship Group
+ * and hasOne CustomerProfuile as the relationship CustomerProfile
+ *
+ * Copyright 2013, Kim Stacks
+ * Singapore
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2013, Kim Stacks.
+ * @link http://stacktogether.com
+ * @author Kim Stacks <kim@stacktogether.com>
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @package UtilityBehaviors
+ * @subpackage UtilityBehaviors.Test.Fixture
+ * @filesource
+ * @version 0.1
+ * @lastmodified 2013-11-07 
+ */
 class UserFixture extends CakeTestFixture {
 
 	public $fields = array(

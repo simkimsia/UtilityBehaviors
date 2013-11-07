@@ -45,9 +45,15 @@
  * A recursive value may be specified for the aggregate query. If not specified Cake's default will be used. 
  *    If it's not necessary to use conditions involving a related table, setting recursive to -1 will make the aggregate query more efficient.
  * 
- * @author Vincent Lizzi 
- * @version 2010-07-17 
+ * @author Vincent Lizzi (original)
+ * @author Kim Stacks <kim@stacktogether.com> (forked)
  * @link http://bakery.cakephp.org/articles/vincentm8/2010/08/23/aggregatecache-behavior
+ * @modified
+ * @package UtilityBehaviors
+ * @subpackage UtilityBehaviors.Model.Behavior
+ * @filesource
+ * @version 0.1
+ * @lastmodified 2013-11-07  
  */ 
 class AggregateCacheBehavior extends ModelBehavior { 
 

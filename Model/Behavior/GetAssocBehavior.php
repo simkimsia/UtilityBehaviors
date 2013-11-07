@@ -38,10 +38,10 @@
  * @author Kim Stacks <kim@stacktogether.com>
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
- * @subpackage UtilityBehaviors.Test.Case.Model.Behavior
+ * @subpackage UtilityBehaviors.Model.Behavior
  * @filesource
  * @version 0.1
- * @lastmodified 2013-10-12
+ * @lastmodified 2013-11-07
  */ 
 class GetAssocBehavior extends ModelBehavior { 
 
