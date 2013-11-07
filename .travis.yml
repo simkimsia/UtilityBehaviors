@@ -27,7 +27,7 @@ matrix:
         - FOC_VALIDATE=1 FOC_TRAVIS=1
 
 before_script:
-  - cp -R UtilityBehaviors ../UtilityBehaviors && cd ../UtilityBehaviors
+  - git clone https://github.com/FriendsOfCake/travis.git --depth 1 ../travis
   - ../travis/before_script.sh
 
 script:
