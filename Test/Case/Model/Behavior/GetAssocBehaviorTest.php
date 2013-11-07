@@ -31,6 +31,7 @@ require_once dirname(dirname(__FILE__)) . DS . 'mock_models.php';
  *
  */
 class GetAssocBehaviorTest extends CakeTestCase {
+
 	public $fixtures = array(
 		'plugin.utility_behaviors.user',
 		'plugin.utility_behaviors.customer_profile',
@@ -67,7 +68,6 @@ class GetAssocBehaviorTest extends CakeTestCase {
 		unset($this->CustomerProfile);
 		parent::tearDown();
 	}
-
 
 /**
  * testBelongsTo method

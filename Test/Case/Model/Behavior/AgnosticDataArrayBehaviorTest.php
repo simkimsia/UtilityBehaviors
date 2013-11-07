@@ -30,6 +30,7 @@ require_once dirname(dirname(__FILE__)) . DS . 'mock_models.php';
  *
  */
 class AgnosticDataArrayTest extends CakeTestCase {
+
 	public $fixtures = array(
 		'plugin.utility_behaviors.user',
 		'plugin.utility_behaviors.customer_profile',
@@ -68,7 +69,6 @@ class AgnosticDataArrayTest extends CakeTestCase {
 		parent::tearDown();
 	}
 
-
 /**
  * testExtractByAlias method
  *
@@ -78,7 +78,7 @@ class AgnosticDataArrayTest extends CakeTestCase {
 		// GIVEN the following data array
 		$data = array(
 			'CustomerProfile' => array (
-				'customer_id' => 2, 
+				'customer_id' => 2,
 				'biography' => 'Another Customer Profile'
 			),
 			'User' => array(

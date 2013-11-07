@@ -72,7 +72,7 @@ class FindXORCreatableBehavior extends ModelBehavior {
 		if (empty($findFields)) {
 			$conditions = $suppliedData;
 		} else {
-			foreach($findFields as $field) {
+			foreach ($findFields as $field) {
 				if (array_key_exists($field, $suppliedData)) {
 					$conditions[$field] = $suppliedData[$field];
 				} else {

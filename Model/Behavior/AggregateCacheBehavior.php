@@ -12,11 +12,11 @@
  *   'avg'=>'field name to store the average value' 
  *   'conditions'=>array(), // conditions to use in the aggregate query 
  *   'recursive'=>-1 // recursive setting to use in the aggregate query 
- *  ))); 
+ *  )));
  * 
  * Example: 
- * class QuotationLineItem extends AppModel { 
- *   public $name = 'QuotationLineItem'; 
+ * class QuotationLineItem extends AppModel {
+ *   public $name = 'QuotationLineItem';
  *
  *'UtilityBehaviors.AggregateCache' => array( 
  *               array(
@@ -32,8 +32,8 @@
  *                  'sum'   =>'total_value',
  *              ),
  *      ),
- *   public $belongsTo = array('Quotation'); 
- * } 
+ *   public $belongsTo = array('Quotation');
+ * }
  * 
  * Each element of the configuration array should be an array that specifies: 
  * A field on which the aggregate values should be calculated. The field name may instead be given as a key in the configuration array.
@@ -54,111 +54,114 @@
  * @filesource
  * @version 0.1
  * @lastmodified 2013-11-07  
- */ 
-class AggregateCacheBehavior extends ModelBehavior { 
+ */
+class AggregateCacheBehavior extends ModelBehavior {
 
-    var $foreignTableIDs = array(); 
-    var $config = array(); 
-    var $functions = array('min', 'max', 'avg', 'sum'); 
-    var $defaultWhenNulls = array(
-        'min_default_when_null',
-        'max_default_when_null',
-        'avg_default_when_null',
-        'sum_default_when_null',
-    );
+	public $foreignTableIDs = array();
 
-    public function setup(Model $model, $config = array()) {
-        foreach ($config as $k => $aggregate) { 
-            if (empty($aggregate['field'])) { 
-                $aggregate['field'] = $k; 
-            } 
-            if (!empty($aggregate['field']) && !empty($aggregate['model'])) { 
-                $this->config[] = $aggregate; 
-            }
-        } 
-    } 
+	public $config = array();
 
-    private function __updateCache(Model $model, $aggregate, $foreignKey, $foreignId) { 
-        $assocModel = $model->{$aggregate['model']}; 
-        $calculations = array();
-        foreach ($aggregate as $function => $cacheField) { 
-            if (!in_array($function, $this->functions)) { 
-                continue; 
-            }
-            $calculations[] = $function . '(' . $model->name . '.' . $aggregate['field'] . ') ' . $function . '_value'; 
-        }
-        $defaultWhenNulls = array();
-        foreach ($aggregate as $functionDefaultWhenNull => $defaultValue) { 
-            if (!in_array($functionDefaultWhenNull, $this->defaultWhenNulls)) { 
-                continue; 
-            }
-            $defaultWhenNulls[$functionDefaultWhenNull] = $defaultValue; 
-        }
-        if (count($calculations) > 0) { 
-            $conditions = array($model->name . '.' . $foreignKey => $foreignId); 
-            if (array_key_exists('conditions', $aggregate)) { 
-                $conditions = am($conditions, $aggregate['conditions']); 
-            } else { 
-                $conditions = am($conditions, $model->belongsTo[$aggregate['model']]['conditions']); 
-            } 
-            $recursive = (array_key_exists('recursive', $aggregate)) ? $aggregate['recursive'] : null; 
-            $results = $model->find('first', array( 
-                        'fields' => $calculations, 
-                        'conditions' => $conditions, 
-                        'recursive' => $recursive, 
-                        'group' => $model->name . '.' . $foreignKey, 
-                    )); 
-            $newValues = array(); 
-            foreach ($aggregate as $function => $cacheField) { 
-                if (!in_array($function, $this->functions)) { 
-                    continue; 
-                }
-                if ((!isset($results[0]) || $results[0][$function . '_value'] == null) && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
-                    $newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
-                } else if (isset($results[0])) {
-                    $newValues[$cacheField] = $results[0][$function . '_value']; 
-                } else {
-                    $newValues[$cacheField] = null;
-                }
-            }
-            $assocModel->id = $foreignId; 
-            $assocModel->save($newValues, false, array_keys($newValues)); 
-        } 
-    } 
+	public $functions = array('min', 'max', 'avg', 'sum');
 
-    public function afterSave(Model $model, $created) { 
-        foreach ($this->config as $aggregate) { 
-            if (!array_key_exists($aggregate['model'], $model->belongsTo)) { 
-                continue; 
-            } 
-            $foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey']; 
-            if (isset($model->data[$model->name][$foreignKey])) {
-                $foreignId = $model->data[$model->name][$foreignKey]; 
-                $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
-            }
-        } 
-    } 
+	public $defaultWhenNulls = array(
+		'min_default_when_null',
+		'max_default_when_null',
+		'avg_default_when_null',
+		'sum_default_when_null',
+	);
 
-    public function beforeDelete(Model $model, $cascade = true) { 
-        foreach ($model->belongsTo as $assocKey => $assocData) { 
-            if (isset($assocData['className']) && isset($assocData['foreignKey'])) {
-                $this->foreignTableIDs[$assocData['className']] = $model->field($assocData['foreignKey']); 
-            }
-        } 
-        return true; 
-    } 
+	public function setup(Model $model, $config = array()) {
+		foreach ($config as $k => $aggregate) {
+			if (empty($aggregate['field'])) {
+				$aggregate['field'] = $k;
+			}
+			if (!empty($aggregate['field']) && !empty($aggregate['model'])) {
+				$this->config[] = $aggregate;
+			}
+		}
+	}
 
-    public function afterDelete(Model $model) { 
-        foreach ($this->config as $aggregate) { 
-            if (!array_key_exists($aggregate['model'], $model->belongsTo)) { 
-                continue; 
-            } 
-            $foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey']; 
-            if (!empty($this->foreignTableIDs[$aggregate['model']])) {
-                $foreignId = $this->foreignTableIDs[$aggregate['model']]; 
-                $this->__updateCache($model, $aggregate, $foreignKey, $foreignId); 
-            }
-        }
-    }
+	private function __updateCache(Model $model, $aggregate, $foreignKey, $foreignId) {
+		$assocModel = $model->{$aggregate['model']};
+		$calculations = array();
+		foreach ($aggregate as $function => $cacheField) {
+			if (!in_array($function, $this->functions)) {
+				continue;
+			}
+			$calculations[] = $function . '(' . $model->name . '.' . $aggregate['field'] . ') ' . $function . '_value';
+		}
+		$defaultWhenNulls = array();
+		foreach ($aggregate as $functionDefaultWhenNull => $defaultValue) {
+			if (!in_array($functionDefaultWhenNull, $this->defaultWhenNulls)) {
+				continue;
+			}
+			$defaultWhenNulls[$functionDefaultWhenNull] = $defaultValue;
+		}
+		if (count($calculations) > 0) {
+			$conditions = array($model->name . '.' . $foreignKey => $foreignId);
+			if (array_key_exists('conditions', $aggregate)) {
+				$conditions = am($conditions, $aggregate['conditions']);
+			} else {
+				$conditions = am($conditions, $model->belongsTo[$aggregate['model']]['conditions']);
+			}
+			$recursive = (array_key_exists('recursive', $aggregate)) ? $aggregate['recursive'] : null;
+			$results = $model->find('first', array(
+						'fields' => $calculations,
+						'conditions' => $conditions,
+						'recursive' => $recursive,
+						'group' => $model->name . '.' . $foreignKey,
+					));
+			$newValues = array();
+			foreach ($aggregate as $function => $cacheField) {
+				if (!in_array($function, $this->functions)) {
+					continue;
+				}
+				if ((!isset($results[0]) || $results[0][$function . '_value'] == null) && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
+					$newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
+				} else if (isset($results[0])) {
+					$newValues[$cacheField] = $results[0][$function . '_value'];
+				} else {
+					$newValues[$cacheField] = null;
+				}
+			}
+			$assocModel->id = $foreignId;
+			$assocModel->save($newValues, false, array_keys($newValues));
+		}
+	}
 
-} 
+	public function afterSave(Model $model, $created) {
+		foreach ($this->config as $aggregate) {
+			if (!array_key_exists($aggregate['model'], $model->belongsTo)) {
+				continue;
+			}
+			$foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey'];
+			if (isset($model->data[$model->name][$foreignKey])) {
+				$foreignId = $model->data[$model->name][$foreignKey];
+				$this->__updateCache($model, $aggregate, $foreignKey, $foreignId);
+			}
+		}
+	}
+
+	public function beforeDelete(Model $model, $cascade = true) {
+		foreach ($model->belongsTo as $assocKey => $assocData) {
+			if (isset($assocData['className']) && isset($assocData['foreignKey'])) {
+				$this->foreignTableIDs[$assocData['className']] = $model->field($assocData['foreignKey']);
+			}
+		}
+		return true;
+	}
+
+	public function afterDelete(Model $model) {
+		foreach ($this->config as $aggregate) {
+			if (!array_key_exists($aggregate['model'], $model->belongsTo)) {
+				continue;
+			}
+			$foreignKey = $model->belongsTo[$aggregate['model']]['foreignKey'];
+			if (!empty($this->foreignTableIDs[$aggregate['model']])) {
+				$foreignId = $this->foreignTableIDs[$aggregate['model']];
+				$this->__updateCache($model, $aggregate, $foreignKey, $foreignId);
+			}
+		}
+	}
+
+}

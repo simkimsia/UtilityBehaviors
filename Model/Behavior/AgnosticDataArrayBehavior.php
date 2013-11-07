@@ -91,8 +91,8 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
  * Extract relevant data based on Model alias
  * @param array $data. Data array
  * @param array $options Options array that contains the following 2 keys
- 	- fields: array of the fields we want to extract
- 	- alias: string $alias. Optional. Default null. If null, we use the $model->alias
+ *	- fields: array of the fields we want to extract
+ *	- alias: string $alias. Optional. Default null. If null, we use the $model->alias
  * @return array Extracted fields and their values.
  */
 	public function extractByFields(Model $model, $data, $options = array()) {
@@ -113,7 +113,7 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 
 		$mainModelData = $this->extractByAlias($model, $data, $alias);
 		$results = array();
-		foreach($fields as $field) {
+		foreach ($fields as $field) {
 			$lookForMainModelField = (strpos($field, '.') === false);
 			if ($lookForMainModelField) {
 				$alternativeField = $alias . '.' . $field;
