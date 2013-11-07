@@ -119,7 +119,7 @@ class AgnosticDataArrayBehavior extends ModelBehavior {
 				$alternativeField = $alias . '.' . $field;
 				if (Hash::check($mainModelData, $field)) {
 					$results[$field] = $mainModelData[$field];
-				} else if (Hash::check($data, $alternativeField)) {
+				} elseif (Hash::check($data, $alternativeField)) {
 					$results[$field] = Hash::get($data, $alternativeField);
 				} else {
 					$this->missingFields[] = $field;

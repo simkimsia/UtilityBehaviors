@@ -118,7 +118,7 @@ class AggregateCacheBehavior extends ModelBehavior {
 				}
 				if ((!isset($results[0]) || $results[0][$function . '_value'] == null) && array_key_exists($function . '_default_when_null', $defaultWhenNulls)) {
 					$newValues[$cacheField] = $defaultWhenNulls[$function . '_default_when_null'];
-				} else if (isset($results[0])) {
+				} elseif (isset($results[0])) {
 					$newValues[$cacheField] = $results[0][$function . '_value'];
 				} else {
 					$newValues[$cacheField] = null;
