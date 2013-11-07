@@ -20,7 +20,7 @@ Add the plugin to your project's `composer.json` - something like this:
 
   {
     "require": {
-      "simkimsia/UtilityBehaviors": "dev-master"
+      "simkimsia/utility_behaviors": "dev-master"
     }
   }
 
