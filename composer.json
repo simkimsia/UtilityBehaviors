@@ -1,6 +1,6 @@
 {
   "name": "simkimsia/utility_behaviors",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "Useful behaviors for CakePHP 2.x",
   "type": "cakephp-plugin",
   "keywords": [
