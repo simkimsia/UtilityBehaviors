@@ -17,22 +17,21 @@
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
  * @subpackage UtilityBehaviors.Test.Fixture
- * @filesource
- * @version 0.1
- * @lastmodified 2013-11-07 
+ * @version 0.1.0
  */
 class UserFixture extends CakeTestFixture {
 
 	public $fields = array(
 		'id'			=> array('type' => 'integer', 'key' => 'primary'),
 		'username'	=> array('type' => 'string', 'length' => 255, 'null' => false),
-		'group_id'	=> array('type' => 'integer', 'length' => 11, 'null' => false)
+		'group_id'	=> array('type' => 'integer', 'length' => 11, 'null' => false),
+		'profile_count'	=> array('type' => 'integer', 'length' => 8, 'null' => false)
 	);
 
 	public $records = array(
-		array('id' => 1, 'username' => 'CakePHP', 'group_id' => 1),
-		array('id' => 2, 'username' => 'Zend', 'group_id' => 2),
-		array('id' => 3, 'username' => 'Symfony', 'group_id' => 1),
-		array('id' => 4, 'username' => 'CodeIgniter', 'group_id' => 2)
+		array('id' => 1, 'username' => 'CakePHP', 'group_id' => 1, 'profile_count' => 0),
+		array('id' => 2, 'username' => 'Zend', 'group_id' => 2, 'profile_count' => 1),
+		array('id' => 3, 'username' => 'Symfony', 'group_id' => 1, 'profile_count' => 0),
+		array('id' => 4, 'username' => 'CodeIgniter', 'group_id' => 2, 'profile_count' => 1)
 	);
 }

@@ -23,12 +23,13 @@
 class GroupFixture extends CakeTestFixture {
 
 	public $fields = array(
-		'id'			=> array('type' => 'integer', 'key' => 'primary'),
-		'name'	=> array('type' => 'string', 'length' => 255, 'null' => false)
+		'id' => array('type' => 'integer', 'key' => 'primary'),
+		'name' => array('type' => 'string', 'length' => 255, 'null' => false),
+		'total_profile_count' => array('type' => 'integer', 'length' => 8, 'null' => false)
 	);
 
 	public $records = array(
-		array('id' => 1, 'name' => 'Administrators'),
-		array('id' => 2, 'name' => 'Customers'),
+		array('id' => 1, 'name' => 'Administrators', 'total_profile_count' => 0),
+		array('id' => 2, 'name' => 'Customers', 'total_profile_count' => 0),
 	);
 }

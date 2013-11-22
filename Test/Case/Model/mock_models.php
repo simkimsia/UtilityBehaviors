@@ -18,14 +18,11 @@
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
  * @subpackage UtilityBehaviors.Test.Case.Model
- * @filesource
- * @version 0.1
- * @lastmodified 2013-11-07
+ * @version 0.1.0
  */
 
 App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
-
 
 /**
  * User class

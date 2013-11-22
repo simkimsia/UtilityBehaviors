@@ -129,7 +129,7 @@ class AggregateCacheBehavior extends ModelBehavior {
 		}
 	}
 
-	public function afterSave(Model $model, $created) {
+	public function afterSave(Model $model, $created, $options = array()) {
 		foreach ($this->config as $aggregate) {
 			if (!array_key_exists($aggregate['model'], $model->belongsTo)) {
 				continue;

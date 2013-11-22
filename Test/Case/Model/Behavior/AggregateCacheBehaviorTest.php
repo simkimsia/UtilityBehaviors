@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * AgnosticDataArrayBehaviorTest file
+ * AggregateCacheBehaviorTest file
  *
  * PHP 5
  *
@@ -17,19 +17,17 @@
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
  * @subpackage UtilityBehaviors.Test.Case.Model.Behavior
- * @filesource
  * @version 0.1
- * @lastmodified 2013-11-07
  */
 
 App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
 require_once dirname(dirname(__FILE__)) . DS . 'mock_models.php';
 /**
- * AgnosticDataArrayTest class
+ * AggregateCacheTest class
  *
  */
-class AgnosticDataArrayBehaviorTest extends CakeTestCase {
+class AggregateCacheBehaviorTest extends CakeTestCase {
 
 	public $fixtures = array(
 		'plugin.utility_behaviors.user',
@@ -44,19 +42,24 @@ class AgnosticDataArrayBehaviorTest extends CakeTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
-		$this->CustomerProfile = ClassRegistry::init('CustomerProfile');
+		$this->Group = ClassRegistry::init('Group');
 
-		$this->CustomerProfile->bindModel(array(
+		$this->User->bindModel(array(
 			'belongsTo' => array(
-				'Customer' => array(
-					'className' => 'User',
-					'foreignKey' => 'customer_id',
-					'conditions' => array('Customer.group_id' => 2),
+				'Group' => array(
+					'className' => 'Group',
+					'foreignKey' => 'group_id',
 				)
 			)
 		), false);
-		$this->CustomerProfile->Behaviors->attach('UtilityBehaviors.AgnosticDataArray');
-		$this->User->Behaviors->attach('UtilityBehaviors.AgnosticDataArray');
+		$this->User->Behaviors->attach('UtilityBehaviors.AggregateCache', array(
+				array(
+					'field' => 'profile_count',
+					'model' => 'Group',
+					'sum' => 'total_profile_count',
+					'sum_default_when_null' => 0,
+				)
+		));
 	}
 
 /**
@@ -65,35 +68,35 @@ class AgnosticDataArrayBehaviorTest extends CakeTestCase {
  */
 	public function tearDown() {
 		unset($this->User);
-		unset($this->CustomerProfile);
+		unset($this->Group);
 		parent::tearDown();
 	}
 
 /**
- * testExtractByAlias method
+ * testAggregateCacheWorksAfterSaveChild method
  *
  * @return void
  */
-	public function testExtractByAlias() {
+	public function testAggregateCacheWorksAfterSaveChild() {
 		// GIVEN the following data array
 		$data = array(
-			'CustomerProfile' => array (
-				'customer_id' => 2,
-				'biography' => 'Another Customer Profile'
-			),
 			'User' => array(
 				'id' => 2,
+				'group_id' => 2
 			)
 		);
 		// WHEN we find extractByAlias
-		$result = $this->CustomerProfile->extractByAlias($data);
+		$this->User->save($data);
+		$group = $this->Group->read(null, 2);
 
 		// THEN we expect
 		$expected = array(
-			'customer_id' => 2,
-			'biography' => 'Another Customer Profile'
+			'Group' =>
+				array(
+					'id' => 2, 'name' => 'Customers', 'total_profile_count' => 2
+				)
 		);
 
-		$this->assertEquals($expected, $result);
+		$this->assertEquals($expected, $group);
 	}
 }
