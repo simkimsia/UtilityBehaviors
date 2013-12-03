@@ -4,15 +4,6 @@
  *
  * Within a single method, we can run a validateFields function.
  *
- * Usage is straightforward:
- * using default options
- * From model: $this->validateFields($fields)
- * if you want to stop at the first invalid field
- * From model: $this->validateFields($fields, array('stop' => 'first'));
- * if you don't want to stop at the first invalid field
- * From model: $this->validateFields($fields, array('stop' => false));
- * if you want to stop at the first invalid field and you want to know which fields are invalid
- * From model: $this->validateFields($fields, array('stop' => false), $invalidFields);
  *
  * Copyright 2013, Kim Stacks
  * Singapore
@@ -26,9 +17,7 @@
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @package UtilityBehaviors
  * @subpackage UtilityBehaviors.Model.Behavior
- * @filesource
  * @version 0.1
- * @lastmodified 2013-11-07
  */
 class ValidateFieldsBehavior extends ModelBehavior {
 
@@ -63,9 +52,20 @@ class ValidateFieldsBehavior extends ModelBehavior {
 	}
 
 /**
+ * Usage is straightforward:
+ * using default options
+ * From model: $this->validateFields($fields)
+ * if you want to stop at the first invalid field
+ * From model: $this->validateFields($fields, array('stop' => 'first'));
+ * if you don't want to stop at the first invalid field
+ * From model: $this->validateFields($fields, array('stop' => false));
+ * if you want to stop at the first invalid field and you want to know which fields are invalid
+ * From model: $this->validateFields($fields, array('stop' => false), $invalidFields);
+ *
  * Inspired by http://api.cakephp.org/2.3/source-class-Model.html#1386
  * Validates all fields in the given array
- * @param array $fields. An array of field names. 
+ *
+ * @param array $fields. An array of field names.
  * 				If supplied a single string, will attempt to cast as array
  * 				if neither string nor array, will always return false;
  * @param array $options. Array with following keys
@@ -111,4 +111,5 @@ class ValidateFieldsBehavior extends ModelBehavior {
 		}
 		return false;
 	}
+
 }

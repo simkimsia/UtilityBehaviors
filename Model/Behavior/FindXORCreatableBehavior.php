@@ -21,7 +21,7 @@
  * @subpackage UtilityBehaviors.Model.Behavior
  * @filesource
  * @version 0.1
- * @lastmodified 2013-11-07 
+ * @lastmodified 2013-11-07
  */
 class FindXORCreatableBehavior extends ModelBehavior {
 
@@ -59,7 +59,8 @@ class FindXORCreatableBehavior extends ModelBehavior {
  *
  * Find a record XOR create a new record of this model
  * @param array $data. Should not contain data within the subarray of the mode.
- * @return array Either the found or newly created Model data 
+ * @param array $findFields. Optional. If empty, we will simply use the data itself as the conditions
+ * @return array Either the found or newly created Model data
  */
 	public function findXORCreate(Model $model, $data = array(), $findFields = array()) {
 		$suppliedData = array();
