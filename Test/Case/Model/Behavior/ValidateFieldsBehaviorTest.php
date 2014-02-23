@@ -71,6 +71,5 @@ class ValidateFieldsBehaviorTest extends CakeTestCase {
  * @return void
  */
 	public function testCheckUniqueFields() {
-
 	}
 }
